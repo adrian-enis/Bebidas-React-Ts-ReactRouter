@@ -1,10 +1,19 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { NavLink, useLocation } from "react-router";
+import { useAppStore } from "../stores/useAppStore";
 
 function Header() {
  
-  const { pathname } = useLocation();
+  const { pathname } = useLocation();   // Para saber la localizacion del usuario
   const isHome = useMemo(() => pathname === "/", [pathname]);
+
+  const fetchCategories = useAppStore((state) => state.fetchCategories)
+  const categories = useAppStore((state) => state.categories)
+  console.log(categories)
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
   return (
     <header className={isHome ? "bg-header bg-center bg-cover transi" : "bg-slate-800"}>
       <div className="mx-auto container px-5 py-16">
@@ -63,8 +72,7 @@ function Header() {
                 id="ingredient"
                 name="ingredient"
                 className="p-3 w-full rounded-lg focus:outline-none text-white bg-amber-700 placeholder:text-amber-50"
-                placeholder="Nombre o Ingredientes. Ej. Vodka, Tequila, Cafe"
-              >
+                placeholder="Nombre o Ingredientes. Ej. Vodka, Tequila, Cafe">
                 <option value="">-- Seleccione --</option>
               </select>
             </div>

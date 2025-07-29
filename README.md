@@ -1,69 +1,45 @@
-# React + TypeScript + Vite
+# Documentación del Proyecto de Bebidas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto es una aplicación web para buscar y guardar recetas de bebidas.
 
-Currently, two official plugins are available:
+## Descripción General
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+La aplicación permite a los usuarios buscar recetas de bebidas por nombre o ingredientes, y ver una lista de categorías. También tiene una sección para guardar las recetas favoritas.
 
-## Expanding the ESLint configuration
+## Estructura del Proyecto
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+El proyecto está estructurado de la siguiente manera:
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1.  **`main.tsx`**: Es el punto de entrada de la aplicación. Renderiza el componente `AppRouter`.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+2.  **`router.tsx`**: Define las rutas de la aplicación utilizando `react-router-dom`.
+    *   `/`: La página de inicio, que renderiza el componente `IndexView`.
+    *   `/favoritos`: La página de favoritos, que renderiza el componente `FavoritesView`.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+3.  **`layout/Layout.tsx`**: Es el componente de diseño principal. Contiene el `Header` y el contenido de la ruta actual.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+4.  **`components/Header.tsx`**: Es el encabezado de la aplicación.
+    *   Muestra el logotipo y los enlaces de navegación a "Inicio" y "Favoritos".
+    *   Contiene un formulario de búsqueda que permite a los usuarios buscar recetas por nombre o ingredientes, y filtrar por categoría.
+    *   Cuando el componente se monta, llama a la función `fetchCategories` para obtener la lista de categorías de bebidas.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+5.  **`views/IndexView.tsx`**: Es la vista principal de la aplicación. Actualmente muestra un título "Inicio".
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+6.  **`views/FavoritesView.tsx`**: Es la vista de favoritos. Actualmente muestra un título "Favoritos".
+
+7.  **`stores/useAppStore.ts`**: Es el store principal de la aplicación, creado con `zustand`. Combina todos los "slices" del estado de la aplicación.
+
+8.  **`stores/recipeSlice.ts`**: Es un "slice" del store que maneja el estado relacionado con las recetas.
+    *   `categories`: Un array para almacenar la lista de categorías de bebidas.
+    *   `fetchCategories`: Una función asíncrona que llama a `getCategories` del servicio `RecipeServices` para obtener las categorías.
+
+9.  **`services/RecipeServices.ts`**: Este archivo es responsable de realizar las llamadas a la API para obtener los datos de las bebidas.
+    *   `getCategories`: Una función asíncrona para obtener la lista de categorías de bebidas desde una API.
+
+## Flujo de Datos
+
+1.  Cuando la aplicación se carga, el componente `Header` se monta y llama a la función `fetchCategories` del store.
+2.  La función `fetchCategories` llama a la función `getCategories` del servicio `RecipeServices`.
+3.  El servicio `RecipeServices` realiza una llamada a una API externa para obtener la lista de categorías.
+4.  Los datos obtenidos se guardan en el estado `categories` del `recipeSlice`.
+5.  Los componentes que necesiten acceder a la lista de categorías pueden hacerlo a través del hook `useAppStore`.
