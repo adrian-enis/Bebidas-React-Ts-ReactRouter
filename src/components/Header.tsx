@@ -3,7 +3,7 @@
  * @module Header
  */
 
-import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useAppStore } from "../stores/useAppStore";
 
@@ -33,6 +33,15 @@ function Header() {
       ...searchFilters,
       [e.target.name]: e.target.value
     })
+  }
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    //Todo: Validar
+    if(Object.values(searchFilters).includes("")){
+      console.log("Todos los campos son Obligatorios!!")
+      return
+    }
   }
   return (
     <header className={isHome ? "bg-header bg-center bg-cover transi" : "bg-slate-800"}>
@@ -107,7 +116,7 @@ function Header() {
                 }
               </select>
             </div>
-            <input type="submit" value="Buscar Recetas" className="cursor-pointer bg-orange-800 hover:bg-orange-900 w-full p-3 rounded-lg  font-extrabold text-lg text-white uppercase"  />
+            <input onClick={handleSubmit} type="submit" value="Buscar Recetas" className="cursor-pointer bg-orange-800 hover:bg-orange-900 w-full p-3 rounded-lg  font-extrabold text-lg text-white uppercase"  />
           </form>
         )}
       </div>
