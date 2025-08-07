@@ -19,4 +19,6 @@ export async function getCategories() {
     // Hubo errores de validación
     console.error(result.error);
   }
+
+  return result.data
 }
